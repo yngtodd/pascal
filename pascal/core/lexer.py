@@ -41,6 +41,14 @@ class Lexer:
             if self.current_char == '/':
                 self.advance()
                 return Token(Type.DIVIDE, self.current_char)
+
+            if self.current_char == '(':
+                self.advance()
+                return Token(Type.LPAREN, self.current_char)
+
+            if self.current_char == ')':
+                self.advance()
+                return Token(Type.RPAREN, self.current_char)
         
             raise ValueError(f"Unknown token type: {current_char}")
 

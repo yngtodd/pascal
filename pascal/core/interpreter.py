@@ -22,8 +22,14 @@ class Interpreter:
         factor : INTEGER
         """
         token = self.current_token
-        self.eat(Type.INTEGER)
-        return token.value
+        if token.type == Type.INTEGER:
+            self.eat(Type.INTEGER)
+            return token.value
+        elif token.type == Type.LPAREN:
+            self.eat(Type.LPAREN)
+            result = self.expr()
+            self.eat(Type.RPAREN)
+            return result
 
     def term(self):
         result = self.factor()

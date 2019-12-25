@@ -7,4 +7,6 @@ class Type(Enum):
     MINUS = "MINUS"
     MULTIPLY = "MULTIPLY"
     DIVIDE = "DIVIDE"
+    LPAREN = "("
+    RPAREN = ")"
     EOF = "EOF"
