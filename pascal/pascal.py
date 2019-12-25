@@ -1,3 +1,22 @@
 # -*- coding: utf-8 -*-
+from pascal.core.interpreter import Interpreter
 
-"""Main module."""
+
+def main():
+    while True:
+        try:
+            text = input('calc> ')
+        except EOFError:
+            break
+
+        if not text:
+            continue
+
+        interpreter = Interpreter(text)
+        result = interpreter.expr()
+        print(result)
+
+
+if __name__=='__main__':
+    main()
+
