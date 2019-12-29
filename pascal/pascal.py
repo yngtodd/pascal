@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
+from pascal.core.lexer import Lexer
+from pascal.core.parser import Parser
 from pascal.core.interpreter import Interpreter
 
 
 def main():
     while True:
         try:
-            text = input('calc> ')
+            text = input('pascal> ')
         except EOFError:
             break
 
         if not text:
             continue
 
-        interpreter = Interpreter(text)
-        result = interpreter.expr()
+        lexer = Lexer(text)
+        parser = Parser(lexer)
+        interpreter = Interpreter(parser)
+        result = interpreter.interpret()
         print(result)
 
 
