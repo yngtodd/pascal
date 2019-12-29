@@ -67,6 +67,5 @@ class Parser:
 
         return node
 
-
     def parse(self):
         return self.expr()
