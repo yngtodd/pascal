@@ -3,60 +3,36 @@ from pascal.core.token import Token
 from pascal.core.lexer import Lexer
 
 
-class Interpreter:
+class NodeVisitor:
 
-    def __init__(self, text):
-        self.lexer = Lexer(text)
-        self.current_token = self.lexer.get_next_token()
+    def visit(self, node):
+        method_name = 'visit_' + type(node).__name__
+        visitor = getattr(self, method_name, self.generic_visit)
+        return visitor(node)
 
-    def eat(self, token_type):
-        """ """
-        if self.current_token.type == token_type:
-            self.current_token = self.lexer.get_next_token()
-        else:
-            raise ValueError(f"Improper token type!")
+    def generic_visit(self, node):
+        raise Exception(f'No visit_{type(node).__name__} method.')
 
-    def factor(self):
-        """ Return an INTEGER token value.
 
-        factor : INTEGER
-        """
-        token = self.current_token
-        if token.type == Type.INTEGER:
-            self.eat(Type.INTEGER)
-            return token.value
-        elif token.type == Type.LPAREN:
-            self.eat(Type.LPAREN)
-            result = self.expr()
-            self.eat(Type.RPAREN)
-            return result
+class Interpreter(NodeVisitor):
 
-    def term(self):
-        result = self.factor()
+    def __init__(self, parser):
+        self.parser = parser
 
-        while self.current_token.type in (Type.MULTIPLY, Type.DIVIDE):
-            token = self.current_token
-            if token.type == Type.MULTIPLY:
-                self.eat(Type.MULTIPLY)
-                result *= self.factor()
-            elif token.type == Type.DIVIDE:
-                self.eat(Type.DIVIDE)
-                result /= self.factor()
+    def visit_BinOp(self, node):
+        if node.op.type == Type.PLUS:
+            return self.visit(node.left) + self.visit(node.right)
+        if node.op.type == Type.MINUS:
+            return self.visit(node.left) - self.visit(node.right)
+        if node.op.type == Type.MULTIPLY:
+            return self.visit(node.left) * self.visit(node.right)
+        if node.op.type == Type.DIVISION:
+            return self.visit(node.left) / self.visit(node.right)
 
-        return result
+    def visit_Num(self, node):
+        return node.value
 
-    def expr(self):
-        result = self.term()
+    def interpret(self):
+        tree = self.parser.parse()
+        return self.visit(tree)
 
-        while self.current_token.type in (Type.PLUS, Type.MINUS):
-
-            token = self.current_token
-
-            if token.type == Type.PLUS:
-                self.eat(Type.PLUS)
-                result += self.term()
-            elif token.type == Type.MINUS:
-                self.eat(Type.MINUS)
-                result -= self.term()
-
-        return result
