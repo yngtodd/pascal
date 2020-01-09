@@ -14,7 +14,7 @@ class Lexer:
 
     def get_next_token(self):
         """ Lexical analyzer 
-       
+
         Splits up a sentence into tokens.
         """
         while self.current_char is not None:
@@ -37,7 +37,7 @@ class Lexer:
             if self.current_char == '*':
                 self.advance()
                 return Token(Type.MULTIPLY, self.current_char)
- 
+
             if self.current_char == '/':
                 self.advance()
                 return Token(Type.DIVIDE, self.current_char)
@@ -49,7 +49,7 @@ class Lexer:
             if self.current_char == ')':
                 self.advance()
                 return Token(Type.RPAREN, self.current_char)
-        
+
             raise ValueError(f"Unknown token type: {current_char}")
 
         return Token(Type.EOF, None)
