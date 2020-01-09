@@ -62,6 +62,7 @@ class Lexer:
         return int(result)
 
     def skip_whitespace(self):
+        """ Skip the white space in input """
         while self.current_char is not None and self.current_char.isspace():
             self.advance()
 
